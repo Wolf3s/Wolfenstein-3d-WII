@@ -144,11 +144,12 @@ INL_GetMouseButtons(void)
 //                         Which data to enumerate (MrPeanut)
 //
 ///////////////////////////////////////////////////////////////////////////
-void IN_ChangeInterface(int mode)
+int IN_ChangeInterface(int mode)
 {
-	GCI_ChangeInterface(mode);
-	interfaceMode = mode;
+	if( GCI_ChangeInterface(mode) == CONTROL_ERROR )
+		return -1;
 
+	interfaceMode = mode;
 	switch (mode)
 	{
 	case CONTROL_WIIMOTE:

@@ -165,7 +165,7 @@ extern	char		IN_WaitForASCII(void);
 extern	ScanCode	IN_WaitForKey(void);
 extern	word		IN_GetJoyButtonsDB(word joy);
 extern	const char *IN_GetScanName(ScanCode);
-extern  void        IN_ChangeInterface(int mode);
+extern  int         IN_ChangeInterface(int mode);
 
 void    IN_WaitAndProcessEvents();
 void    IN_ProcessEvents();
