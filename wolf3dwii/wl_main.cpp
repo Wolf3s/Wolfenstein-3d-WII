@@ -13,6 +13,7 @@
 
 
 #include "wiistub.h"
+#include <wiiuse/wpad.h>
 
 
 /*
@@ -71,10 +72,12 @@ int32_t  heightnumerator;
 
 
 void    Quit (const char *error,...);
+void doPadPowerOff( s32 chan );
 
 boolean startgame;
 boolean loadedgame;
 int     mouseadjustment;
+bool    bPowerOff = false;
 
 char    configname[13]="config.";
 
@@ -1230,7 +1233,9 @@ static void InitGame()
     }
     atexit(SDL_Quit);
 
-    int numJoysticks = SDL_NumJoysticks();
+	WPAD_SetPowerButtonCallback( doPadPowerOff ); 
+
+	int numJoysticks = SDL_NumJoysticks();
     if(param_joystickindex && (param_joystickindex < -1 || param_joystickindex >= numJoysticks))
     {
         if(!numJoysticks)
@@ -1499,7 +1504,9 @@ void Quit (const char *errorStr, ...)
 #endif
             VW_WaitVBL(100);
         }
-      //  wiiSleepUntilKbHit();
+		if ( bPowerOff == true )
+			SYS_ResetSystem( SYS_POWEROFF, 0, 0 );
+		
 		exit(1);
     }
 
@@ -1534,7 +1541,10 @@ void Quit (const char *errorStr, ...)
         SetTextCursor(0,7);
 #endif
         VW_WaitVBL(200);
-    //    wiiSleepUntilKbHit();
+	
+		if ( bPowerOff == true )
+			SYS_ResetSystem( SYS_POWEROFF, 0, 0 );
+		
 		exit(1);
     }
     else
@@ -1548,7 +1558,9 @@ void Quit (const char *errorStr, ...)
 #endif
     }
 
-    //wiiSleepUntilKbHit();
+    if ( bPowerOff == true )
+		SYS_ResetSystem( SYS_POWEROFF, 0, 0 );
+	
 	exit(0);
 }
 
@@ -1980,5 +1992,12 @@ void logClose(void)
 {
 	fclose(wolflog);
 }
+
+void doPadPowerOff( s32 chan )
+{
+	bPowerOff = true;
+	return;
+}
+
 
 

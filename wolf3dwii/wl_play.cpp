@@ -24,6 +24,8 @@
 =============================================================================
 */
 
+extern bool bPowerOff;
+
 boolean madenoise;              // true when shooting or screaming
 
 exit_t playstate;
@@ -458,6 +460,9 @@ void PollControls (void)
     byte buttonbits;
 
     IN_ProcessEvents();
+
+	if( bPowerOff )
+		Quit(NULL);
 
 //
 // get timing info for last frame

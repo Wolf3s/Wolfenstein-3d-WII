@@ -29,6 +29,7 @@
 */
 
 extern FILE *wolflog;
+extern bool bPowerOff;
 
 boolean         ingame,fizzlein;
 gametype        gamestate;

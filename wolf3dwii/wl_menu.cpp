@@ -19,6 +19,7 @@
 
 extern int lastgamemusicoffset;
 extern int numEpisodesMissing;
+extern bool bPowerOff;
 
 //
 // PRIVATE PROTOTYPES
@@ -3663,6 +3664,9 @@ ReadAnyControl (ControlInfo * ci)
     int mouseactive = 0;
 
     IN_ReadControl (0, ci);
+
+	if( bPowerOff )
+		Quit(NULL);
 
     if (mouseenabled && IN_IsInputGrabbed())
     {
