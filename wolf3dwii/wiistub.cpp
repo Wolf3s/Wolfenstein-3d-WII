@@ -50,7 +50,7 @@ extern "C"           // we need C style linkage for SDL_Main
 	printf("\n\n\n\n\n");
 	
 	printf(" =====================================================\n");
-	printf(" Wolfenstein 3D Wii v.0.1.0 by Nick [MrPeanut] Cavallo\n");
+	printf(" Wolfenstein 3D Wii v.1.2a by Nick [MrPeanut] Cavallo\n");
 	printf(" Based on Wolf4SDL v.1.6\n");
 	printf(" =====================================================\n\n");
 

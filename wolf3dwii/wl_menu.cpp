@@ -3466,7 +3466,7 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
 
         if( interfaceMode == CONTROL_MODERN )
 		{
-			if (Keyboard[sc_Enter] || Keyboard[sc_Space])
+			if (ci.button0 || Keyboard[sc_Enter] || Keyboard[sc_Space])
 				exit = 1;
 			
 			if (ci.button1 && !Keyboard[sc_Alt] || Keyboard[sc_Escape] || Keyboard[sc_Control] || Keyboard[sc_LShift]) 
@@ -3817,7 +3817,7 @@ Confirm (const char *string)
     while (!Keyboard[sc_S] && !Keyboard[sc_N] && !Keyboard[sc_Escape]);
 #else
     }
-    while (!Keyboard[sc_Y] && !Keyboard[sc_N] && !Keyboard[sc_Escape] && !ci.button0 && !ci.button1);
+    while (!Keyboard[sc_Y] && !Keyboard[sc_N] && !Keyboard[sc_Escape] && !Keyboard[sc_Space] && !ci.button0 && !ci.button1);
 #endif
 
 #ifdef SPANISH
@@ -3827,11 +3827,22 @@ Confirm (const char *string)
         ShootSnd ();
     }
 #else
-    if (Keyboard[sc_Y] || ci.button0)
-    {
-        xit = 1;
-        ShootSnd ();
-    }
+    if( interfaceMode == CONTROL_MODERN )
+	{
+		if( Keyboard[sc_Space] )
+		{
+			xit = 1;
+			ShootSnd( );
+		}
+	}
+	else
+	{
+		if (Keyboard[sc_Y] || ci.button0)
+		{
+			xit = 1;
+			ShootSnd ();
+		}
+	}
 #endif
 
     IN_ClearKeysDown ();
