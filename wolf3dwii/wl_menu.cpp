@@ -81,7 +81,7 @@ CP_itemtype MainMenu[] = {
     {1, STR_CL, CP_Control},
     {1, STR_LG, CP_LoadGame},
     {0, STR_SG, CP_SaveGame},
-    {1, STR_CV, CP_ChangeView},
+    {1, STR_MO, CP_MiscOpts},
 
 #ifndef GOODTIMES
 #ifndef SPEAR
@@ -129,6 +129,14 @@ CP_itemtype SndMenu[] = {
     {1, STR_NONE, 0},
     {1, STR_ALSB, 0}
 #endif
+};
+
+enum { CTL_IRSENS, CTL_ALLGUNS, CTL_INFAMMO, CTL_GODMODE };
+CP_itemtype MiscMenu[] = {
+	{1, "IR Sensitivity", MouseSensitivity},
+	{1, "Cheat: All Guns", 0},
+	{1, "Cheat: Infinate Ammo", 0},
+	{1, "Cheat: God Mode", 0}
 };
 
 //enum { CTL_MOUSEENABLE, CTL_MOUSESENS, CTL_JOYENABLE, CTL_CUSTOMIZE };
@@ -260,7 +268,8 @@ CP_iteminfo MainItems = { MENU_X, MENU_Y, lengthof(MainMenu), STARTITEM, 24 },
             SndItems  = { SM_X, SM_Y1, lengthof(SndMenu), 0, 52 },
             LSItems   = { LSM_X, LSM_Y, lengthof(LSMenu), 0, 24 },
             CtlItems  = { CTL_X, CTL_Y, lengthof(CtlMenu), -1, 56 },
-            CusItems  = { 8, CST_Y + 13 * 2, lengthof(CusMenu), -1, 0},
+			MiscItems = { CTL_X, CTL_Y, lengthof(MiscMenu), -1, 56 },
+			CusItems  = { 8, CST_Y + 13 * 2, lengthof(CusMenu), -1, 0},
 #ifndef SPEAR
             NewEitems = { NE_X, NE_Y, lengthof(NewEmenu), 0, 88 },
 #endif
@@ -450,7 +459,7 @@ US_ControlPanel (ScanCode scancode)
             goto finishup;
 
         case sc_F5:
-            CP_ChangeView (0);
+            CP_MiscOpts (0);
             goto finishup;
 
         case sc_F6:
@@ -1819,6 +1828,64 @@ CP_SaveGame (int quick)
 
 ////////////////////////////////////////////////////////////////////
 //
+// NEW MISC OPTS MENU (REPLACES VIEW SIZE)
+//
+////////////////////////////////////////////////////////////////////
+int CP_MiscOpts(int)
+{
+	int which;
+
+	DrawMiscOptsScreen();
+	MenuFadeIn();
+	WaitKeyUp();
+
+	do
+	{
+		which = HandleMenu( &MiscItems, MiscMenu, NULL);
+		switch( which )
+		{
+		case CTL_GODMODE:
+			if( godmode == 0 )
+				godmode = 2;
+			else if( godmode == 2 )
+				godmode = 0;
+			//MiscItems.curpos = 0;
+			DrawMiscOptsScreen( );
+			ShootSnd( );
+			break;
+		case CTL_INFAMMO:
+			ammocheat = !ammocheat;
+			//MiscItems.curpos = 0;
+			DrawMiscOptsScreen( );
+			ShootSnd( );
+			break;
+		case CTL_ALLGUNS:
+			weaponcheat = !weaponcheat;
+			if( weaponcheat == 1 )
+				GiveWeapon( wp_chaingun );
+			//MiscItems.curpos = 0;
+			DrawMiscOptsScreen( );
+			ShootSnd( );
+			break;
+		case CTL_IRSENS:
+			DrawMiscOptsScreen( );
+			MenuFadeIn ();
+            WaitKeyUp ();
+			break;
+
+		}
+	}
+	while (which >= 0);
+
+	MenuFadeOut();
+
+	return( 0 );
+}
+
+
+
+////////////////////////////////////////////////////////////////////
+//
 // DEFINE CONTROLS
 //
 ////////////////////////////////////////////////////////////////////
@@ -1923,8 +1990,8 @@ DrawMouseSens (void)
 
     VWB_Bar (60, 97, 200, 10, TEXTCOLOR);
     DrawOutline (60, 97, 200, 10, 0, HIGHLIGHT);
-    DrawOutline (60 + 20 * mouseadjustment, 97, 20, 10, 0, READCOLOR);
-    VWB_Bar (61 + 20 * mouseadjustment, 98, 19, 9, READHCOLOR);
+    DrawOutline (60 + 20 * ( mouseadjustment * 10 ), 97, 20, 10, 0, READCOLOR);
+    VWB_Bar (61 + 20 * ( mouseadjustment * 10 ), 98, 19, 9, READHCOLOR);
 
     VW_UpdateScreen ();
     MenuFadeIn ();
@@ -1939,10 +2006,11 @@ int
 MouseSensitivity (int)
 {
     ControlInfo ci;
-    int exit = 0, oldMA;
+    int exit = 0;
+	float newMA;
 
 
-    oldMA = mouseadjustment;
+    newMA = mouseadjustment * 10;
     DrawMouseSens ();
     do
     {
@@ -1952,13 +2020,13 @@ MouseSensitivity (int)
         {
             case dir_North:
             case dir_West:
-                if (mouseadjustment)
+                if (newMA)
                 {
-                    mouseadjustment--;
+                    newMA--;
                     VWB_Bar (60, 97, 200, 10, TEXTCOLOR);
                     DrawOutline (60, 97, 200, 10, 0, HIGHLIGHT);
-                    DrawOutline (60 + 20 * mouseadjustment, 97, 20, 10, 0, READCOLOR);
-                    VWB_Bar (61 + 20 * mouseadjustment, 98, 19, 9, READHCOLOR);
+                    DrawOutline (60 + 20 * newMA, 97, 20, 10, 0, READCOLOR);
+                    VWB_Bar (61 + 20 * newMA, 98, 19, 9, READHCOLOR);
                     VW_UpdateScreen ();
                     SD_PlaySound (MOVEGUN1SND);
                     TicDelay(20);
@@ -1967,13 +2035,13 @@ MouseSensitivity (int)
 
             case dir_South:
             case dir_East:
-                if (mouseadjustment < 9)
+                if (newMA < 9)
                 {
-                    mouseadjustment++;
+                    newMA++;
                     VWB_Bar (60, 97, 200, 10, TEXTCOLOR);
                     DrawOutline (60, 97, 200, 10, 0, HIGHLIGHT);
-                    DrawOutline (60 + 20 * mouseadjustment, 97, 20, 10, 0, READCOLOR);
-                    VWB_Bar (61 + 20 * mouseadjustment, 98, 19, 9, READHCOLOR);
+                    DrawOutline (60 + 20 * newMA, 97, 20, 10, 0, READCOLOR);
+                    VWB_Bar (61 + 20 * newMA, 98, 19, 9, READHCOLOR);
                     VW_UpdateScreen ();
                     SD_PlaySound (MOVEGUN1SND);
                     TicDelay(20);
@@ -1985,22 +2053,79 @@ MouseSensitivity (int)
             exit = 1;
         else if (ci.button1 || Keyboard[sc_Escape])
             exit = 2;
-
-    }
+	
+	}
     while (!exit);
 
     if (exit == 2)
     {
-        mouseadjustment = oldMA;
         SD_PlaySound (ESCPRESSEDSND);
     }
     else
-        SD_PlaySound (SHOOTSND);
-
-    WaitKeyUp ();
+	{
+		SD_PlaySound (SHOOTSND);
+		mouseadjustment = newMA / 10;
+	}
+    
+	WaitKeyUp ();
     MenuFadeOut ();
 
     return 0;
+}
+
+
+///////////////////////////
+//
+// DRAW MISC OPTIONS SCREEN
+//
+void DrawMiscOptsScreen( void )
+{
+	int i, x, y;
+
+	ClearMScreen( );
+	DrawStripes( 10 );
+	VWB_DrawPic( 80, 0, C_OPTIONSPIC );
+	DrawWindow( CTL_X - 8, CTL_Y - 5, CTL_W, CTL_H, BKGDCOLOR );
+	WindowX = 0;
+	WindowW = 320;
+	SETFONTCOLOR( TEXTCOLOR, BKGDCOLOR );
+	DrawMenu( &MiscItems, MiscMenu );
+	x = CTL_X + MiscItems.indent - 24;
+	y = CTL_Y + 14;
+
+	if( weaponcheat == 1 )
+		VWB_DrawPic( x, y, C_SELECTEDPIC );
+	else
+		VWB_DrawPic( x, y, C_NOTSELECTEDPIC );
+
+	y = CTL_Y + 29;
+
+	if( ammocheat == 1 )
+		VWB_DrawPic( x, y, C_SELECTEDPIC );
+	else
+		VWB_DrawPic( x, y, C_NOTSELECTEDPIC );
+
+	y = CTL_Y + 43;
+
+	if( godmode == 2 )
+		VWB_DrawPic( x, y, C_SELECTEDPIC );
+	else
+		VWB_DrawPic( x, y, C_NOTSELECTEDPIC );
+
+	if (MiscItems.curpos < 0 || !MiscMenu[MiscItems.curpos].active)
+    {
+        for (i = 0; i < MiscItems.amount; i++)
+        {
+            if (MiscMenu[i].active)
+            {
+                MiscItems.curpos = i;
+                break;
+            }
+        }
+    }
+
+    DrawMenuGun (&MiscItems);
+    VW_UpdateScreen ();
 }
 
 
@@ -2838,118 +2963,6 @@ DrawCustKeys (int hilight)
     for (i = 0; i < 4; i++)
         PrintCustKeys (i);
 }
-
-
-////////////////////////////////////////////////////////////////////
-//
-// CHANGE SCREEN VIEWING SIZE
-//
-////////////////////////////////////////////////////////////////////
-int
-CP_ChangeView (int)
-{
-    int exit = 0, oldview, newview;
-    ControlInfo ci;
-
-    WindowX = WindowY = 0;
-    WindowW = 320;
-    WindowH = 200;
-    newview = oldview = viewsize;
-    DrawChangeView (oldview);
-    MenuFadeIn ();
-
-    do
-    {
-        CheckPause ();
-        SDL_Delay(5);
-        ReadAnyControl (&ci);
-        switch (ci.dir)
-        {
-            case dir_South:
-            case dir_West:
-                newview--;
-                if (newview < 4)
-                    newview = 4;
-                if(newview >= 19) DrawChangeView(newview);
-                else ShowViewSize (newview);
-                VW_UpdateScreen ();
-                SD_PlaySound (HITWALLSND);
-                TicDelay (10);
-                break;
-
-            case dir_North:
-            case dir_East:
-                newview++;
-                if (newview >= 21)
-                {
-                    newview = 21;
-                    DrawChangeView(newview);
-                }
-                else ShowViewSize (newview);
-                VW_UpdateScreen ();
-                SD_PlaySound (HITWALLSND);
-                TicDelay (10);
-                break;
-        }
-
-        if (ci.button0 || Keyboard[sc_Enter])
-            exit = 1;
-        else if (ci.button1 || Keyboard[sc_Escape])
-        {
-            SD_PlaySound (ESCPRESSEDSND);
-            MenuFadeOut ();
-            if(screenHeight % 200 != 0)
-                VL_ClearScreen(0);
-            return 0;
-        }
-    }
-    while (!exit);
-
-    if (oldview != newview)
-    {
-        SD_PlaySound (SHOOTSND);
-        Message (STR_THINK "...");
-        NewViewSize (newview);
-    }
-
-    ShootSnd ();
-    MenuFadeOut ();
-    if(screenHeight % 200 != 0)
-        VL_ClearScreen(0);
-
-    return 0;
-}
-
-
-/////////////////////////////
-//
-// DRAW THE CHANGEVIEW SCREEN
-//
-void
-DrawChangeView (int view)
-{
-    int rescaledHeight = screenHeight / scaleFactor;
-    if(view != 21) VWB_Bar (0, rescaledHeight - 40, 320, 40, bordercol);
-
-#ifdef JAPAN
-    CA_CacheScreen (S_CHANGEPIC);
-
-    ShowViewSize (view);
-#else
-    ShowViewSize (view);
-
-    PrintY = (screenHeight / scaleFactor) - 39;
-    WindowX = 0;
-    WindowY = 320;                                  // TODO: Check this!
-    SETFONTCOLOR (HIGHLIGHT, BKGDCOLOR);
-
-    US_CPrint (STR_SIZE1 "\n");
-    US_CPrint (STR_SIZE2 "\n");
-    US_CPrint (STR_SIZE3);
-#endif
-    VW_UpdateScreen ();
-}
-
 
 ////////////////////////////////////////////////////////////////////
 //

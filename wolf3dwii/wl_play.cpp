@@ -39,6 +39,7 @@ objtype *newobj, *obj, *player, *lastobj, *objfreelist, *killerobj;
 
 boolean noclip, ammocheat;
 int godmode, singlestep, extravbls = 1; // to remove flicker (gray stuff at the bottom)
+int weaponcheat;
 
 byte tilemap[MAPSIZE][MAPSIZE]; // wall values only
 byte spotvis[MAPSIZE][MAPSIZE];
@@ -353,7 +354,7 @@ void PollMouseMove (void)
 	mousexmove -= screenWidth  / 2;
     mouseymove -= screenHeight / 2;
 
-    controlx += mousexmove * 0.8; //*// 10 / 20;
+    controlx += mousexmove * mouseadjustment; //*// 10 / 20;
 	//controlx += mousexmove * 10 / (13 - mouseadjustment);
     //controly += mouseymove * 20 / (13 - mouseadjustment);
 }

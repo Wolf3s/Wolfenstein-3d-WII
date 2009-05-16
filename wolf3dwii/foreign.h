@@ -18,7 +18,7 @@
 #define	STR_CL	"Control"
 #define	STR_LG	"Load Game"
 #define	STR_SG	"Save Game"
-#define	STR_CV	"Change View"
+#define STR_MO  "Misc. Options"
 #define	STR_VS	"View Scores"
 #define STR_EG	"End Game"
 #define	STR_BD	"Back to Demo"

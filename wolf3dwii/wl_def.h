@@ -913,7 +913,7 @@ extern  fixed    scale;
 
 extern  int      dirangle[9];
 
-extern  int      mouseadjustment;
+extern  float    mouseadjustment;
 extern  int      shootdelta;
 extern  unsigned screenofs;
 
@@ -943,7 +943,6 @@ void            NewViewSize (int width);
 boolean         SetViewSize (unsigned width, unsigned height);
 boolean         LoadTheGame(FILE *file,int x,int y);
 boolean         SaveTheGame(FILE *file,int x,int y);
-void            ShowViewSize (int width);
 void            ShutdownId (void);
 
 
@@ -1030,6 +1029,7 @@ extern  objtype     *newobj,*killerobj;
 extern  doorobj_t   doorobjlist[MAXDOORS];
 extern  doorobj_t   *lastdoorobj;
 extern  int         godmode;
+extern  int         weaponcheat;
 
 extern  boolean     demorecord,demoplayback;
 extern  int8_t      *demoptr, *lastdemoptr;

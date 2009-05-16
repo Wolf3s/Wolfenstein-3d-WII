@@ -1383,7 +1383,10 @@ restartgame:
     died = false;
     do
     {
-        if (!loadedgame)
+        if( weaponcheat )
+			GiveWeapon( wp_chaingun );
+		
+		if (!loadedgame)
             gamestate.score = gamestate.oldscore;
         if(!died || viewsize != 21) DrawScore();
 

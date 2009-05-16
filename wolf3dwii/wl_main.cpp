@@ -76,7 +76,7 @@ void doPadPowerOff( s32 chan );
 
 boolean startgame;
 boolean loadedgame;
-int     mouseadjustment;
+float   mouseadjustment;
 bool    bPowerOff = false;
 
 char    configname[13]="config.";
@@ -175,6 +175,7 @@ void ReadConfig(void)
 
         read(file,&viewsize,sizeof(viewsize));
         read(file,&mouseadjustment,sizeof(mouseadjustment));
+		read(file,&interfaceMode,sizeof(interfaceMode));
 
         close(file);
 
@@ -201,7 +202,7 @@ void ReadConfig(void)
             joystickenabled = false;
 
         if(mouseadjustment<0) mouseadjustment=0;
-        else if(mouseadjustment>9) mouseadjustment=9;
+        else if(mouseadjustment>1) mouseadjustment=1;
 
         if(viewsize<4) viewsize=4;
         else if(viewsize>21) viewsize=21;
@@ -238,12 +239,14 @@ noconfig:
             joystickenabled = true;
 
         viewsize = 19;                          // start with a good size
-        mouseadjustment=0;
-    }
+        mouseadjustment=0.6;
+		interfaceMode = CONTROL_WIIMOTE;
+	}
 
     SD_SetMusicMode (sm);
     SD_SetSoundMode (sd);
     SD_SetDigiDevice (sds);
+	IN_ChangeInterface(interfaceMode);
 }
 
 /*
@@ -287,6 +290,7 @@ void WriteConfig(void)
 
         write(file,&viewsize,sizeof(viewsize));
         write(file,&mouseadjustment,sizeof(mouseadjustment));
+		write(file,&interfaceMode,sizeof(interfaceMode));
 
         close(file);
     }
@@ -1245,9 +1249,7 @@ static void InitGame()
         exit(1);
     }
 
-    // MrPeanut change controller interface type to "gamecube"
-
-	IN_ChangeInterface(CONTROL_WIIMOTE);
+    
 	
 	SignonScreen ();
 
@@ -1417,38 +1419,6 @@ boolean SetViewSize (unsigned width, unsigned height)
 
     return true;
 }
-
-
-void ShowViewSize (int width)
-{
-    int oldwidth,oldheight;
-
-    oldwidth = viewwidth;
-    oldheight = viewheight;
-
-    if(width == 21)
-    {
-        viewwidth = screenWidth;
-        viewheight = screenHeight;
-        VWB_BarScaledCoord (0, 0, screenWidth, screenHeight, 0);
-    }
-    else if(width == 20)
-    {
-        viewwidth = screenWidth;
-        viewheight = screenHeight - scaleFactor*STATUSLINES;
-        DrawPlayBorder ();
-    }
-    else
-    {
-        viewwidth = width*16*screenWidth/320;
-        viewheight = (int) (width*16*HEIGHTRATIO*screenHeight/200);
-        DrawPlayBorder ();
-    }
-
-    viewwidth = oldwidth;
-    viewheight = oldheight;
-}
-
 
 void NewViewSize (int width)
 {
