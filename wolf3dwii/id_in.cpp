@@ -64,6 +64,8 @@ static int JoyNumHats;
 
 static bool GrabInput = false;
 
+void IN_ConfigureButtonMap( void );
+
 /*
 =============================================================================
 
@@ -154,15 +156,36 @@ int IN_ChangeInterface(int mode)
 	{
 	case CONTROL_WIIMOTE:
 		joystickenabled = false;  // wiimote doesn't use joystick
+		mouseenabled = false;   
+		IN_ConfigureButtonMap( );
 		break;
 	case CONTROL_GAMECUBE:
 		joystickenabled = true;
+		mouseenabled = false;
+		IN_ConfigureButtonMap( );
 		break;
 	case CONTROL_MODERN:
 		joystickenabled = true;
+		mouseenabled = true;
+		IN_ConfigureButtonMap( );
 		break;
 	}
 
+}
+void IN_ConfigureButtonMap( void )
+{
+	switch( interfaceMode )
+	{
+	case CONTROL_WIIMOTE:
+	case CONTROL_GAMECUBE:
+		dirscan[0] = sc_UpArrow; dirscan[1] = sc_RightArrow; dirscan[2] = sc_DownArrow, dirscan[3] = sc_LeftArrow;
+		buttonscan[4] = sc_1; buttonscan[5] = sc_2; buttonscan[6] = sc_3; buttonscan[7] = sc_4;
+		break;
+	case CONTROL_MODERN:
+		dirscan[0] = sc_None; dirscan[1] = sc_None; dirscan[2] = sc_None; dirscan[3] = sc_None;
+		buttonscan[4] = sc_UpArrow; buttonscan[5] = sc_RightArrow; buttonscan[6] = sc_DownArrow; buttonscan[7] = sc_LeftArrow;
+		break;
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////

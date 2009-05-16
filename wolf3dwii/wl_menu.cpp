@@ -3464,11 +3464,24 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
                 break;
         }
 
-        if (ci.button0 || Keyboard[sc_Enter]) // mrp got rid of spacebar from entering menu
-            exit = 1;
+        if( interfaceMode == CONTROL_MODERN )
+		{
+			if (Keyboard[sc_Enter] || Keyboard[sc_Space])
+				exit = 1;
+			
+			if (ci.button1 && !Keyboard[sc_Alt] || Keyboard[sc_Escape] || Keyboard[sc_Control] || Keyboard[sc_LShift]) 
+				exit = 2;
+		}
 
-        if (ci.button1 && !Keyboard[sc_Alt] || Keyboard[sc_Escape] || Keyboard[sc_Space]) // mrp changed so spacebar (b button) exits menu
-            exit = 2;
+		else
+		{
+			if (ci.button0 || Keyboard[sc_Enter]) // mrp got rid of spacebar from entering menu
+				exit = 1;
+			
+			if (ci.button1 && !Keyboard[sc_Alt] || Keyboard[sc_Escape] || Keyboard[sc_Space]) // mrp changed so spacebar (b button) exits menu
+				exit = 2;
+		}
+
 
     }
     while (!exit);
@@ -3681,7 +3694,7 @@ ReadAnyControl (ControlInfo * ci)
 	if( bPowerOff )
 		Quit(NULL);
 
-    if (mouseenabled && IN_IsInputGrabbed())
+   /* if (mouseenabled && IN_IsInputGrabbed())
     {
         int mousex, mousey, buttons;
         buttons = SDL_GetMouseState(&mousex, &mousey);
@@ -3725,6 +3738,7 @@ ReadAnyControl (ControlInfo * ci)
             mouseactive = 1;
         }
     }
+*/
 
     if (joystickenabled && !mouseactive)
     {
