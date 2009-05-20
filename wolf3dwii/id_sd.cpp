@@ -949,12 +949,12 @@ SD_SetSoundMode(SDMode mode)
     }
     SoundTable = &audiosegs[STARTADLIBSOUNDS];
 
-  //  if (result && (mode != SoundMode))
-  //  {
-  //      SDL_ShutDevice();
-  //      SoundMode = mode;
-  //      SDL_StartDevice();
-  //  }
+    if (result && (mode != SoundMode))
+    {
+        SDL_ShutDevice();
+        SoundMode = mode;
+        SDL_StartDevice();
+    }
 
     return(true);
 }
@@ -1055,7 +1055,7 @@ void SDL_IMFMusicPlayer(void *udata, Uint8 *stream, int len)
             do
             {
                 if(sqHackTime > alTimeCount) break;
-                sqHackTime = alTimeCount + *(sqHackPtr+1);
+                sqHackTime = alTimeCount + wiiShortSwap(*(sqHackPtr+1));
                 alOut(*(byte *) sqHackPtr, *(((byte *) sqHackPtr)+1));
                 sqHackPtr += 2;
                 sqHackLen -= 4;
@@ -1064,7 +1064,9 @@ void SDL_IMFMusicPlayer(void *udata, Uint8 *stream, int len)
             alTimeCount++;
             if(!sqHackLen)
             {
-                sqHackPtr = sqHack;
+				//Quit(NULL);
+				sqHackPtr = sqHack;
+				
                 sqHackLen = sqHackSeqLen;
                 sqHackTime = 0;
                 alTimeCount = 0;
@@ -1094,14 +1096,16 @@ SD_Startup(void)
         return;
     }
 
-    Mix_ReserveChannels(2);  // reserve player and boss weapon channels
+    //Mix_Volume(-1, 0);
+	//Mix_VolumeMusic(0);
+	Mix_ReserveChannels(2);  // reserve player and boss weapon channels
     Mix_GroupChannels(2, MIX_CHANNELS-1, 1); // group remaining channels
 
     // Init music
 
     samplesPerMusicTick = param_samplerate / 700;    // SDL_t0FastAsmService played at 700Hz
 
-    if(YM3812Init(1,3579545,param_samplerate))
+    if(YM3812Init(1,3600000,/*3579545*/param_samplerate))
     {
         printf("Unable to create virtual OPL!!\n");
     }
@@ -1362,16 +1366,14 @@ SD_MusicOff(void)
 void
 SD_StartMusic(int chunk)
 {
-    return;
-	
-	SD_MusicOff();
+    SD_MusicOff();
 
     if (MusicMode == smm_AdLib)
     {
         int32_t chunkLen = CA_CacheAudioChunk(chunk);
         sqHack = (word *)(void *) audiosegs[chunk];     // alignment is correct
-        if(*sqHack == 0) sqHackLen = sqHackSeqLen = chunkLen;
-        else sqHackLen = sqHackSeqLen = *sqHack++;
+        if ( wiiShortSwap(*sqHack) == 0 ) sqHackLen = sqHackSeqLen = chunkLen;
+        else sqHackLen = sqHackSeqLen = wiiShortSwap( *sqHack++ );
         sqHackPtr = sqHack;
         sqHackTime = 0;
         alTimeCount = 0;
@@ -1382,16 +1384,14 @@ SD_StartMusic(int chunk)
 void
 SD_ContinueMusic(int chunk, int startoffs)
 {
-    return;
-	
-	SD_MusicOff();
+   SD_MusicOff();
 
     if (MusicMode == smm_AdLib)
     {
         int32_t chunkLen = CA_CacheAudioChunk(chunk);
         sqHack = (word *)(void *) audiosegs[chunk];     // alignment is correct
-        if(*sqHack == 0) sqHackLen = sqHackSeqLen = chunkLen;
-        else sqHackLen = sqHackSeqLen = *sqHack++;
+        if ( wiiShortSwap(*sqHack) == 0 ) sqHackLen = sqHackSeqLen = chunkLen;
+        else sqHackLen = sqHackSeqLen = wiiShortSwap( *sqHack++ );
         sqHackPtr = sqHack;
 
         if(startoffs >= sqHackLen)

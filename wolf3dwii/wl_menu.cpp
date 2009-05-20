@@ -3185,8 +3185,7 @@ SetupControlPanel (void)
         VL_ClearScreen(0);
 
     if (!ingame)
-		;
-		//CA_LoadAllSounds ();
+		CA_LoadAllSounds ();
    
 	else
         MainMenu[savegame].active = 1;

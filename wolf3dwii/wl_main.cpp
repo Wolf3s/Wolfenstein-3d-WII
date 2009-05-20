@@ -101,7 +101,7 @@ int     param_audiobuffer = 128;
 #else
 int     param_joystickhat = -1;
 int     param_samplerate = 32000;
-int     param_audiobuffer = 1024;
+int     param_audiobuffer = 2048 / (44100 / param_samplerate);
 #endif
 
 int     param_mission = 1;
@@ -1220,7 +1220,7 @@ void DoJukebox(void)
 
 static void InitGame()
 {
-	//logStartup ();
+	logStartup ();
 
 #ifndef SPEARDEMO
     boolean didjukebox=false;
@@ -1445,7 +1445,7 @@ void NewViewSize (int width)
 
 void Quit (const char *errorStr, ...)
 {
-	//fclose(wolflog);
+	fclose(wolflog);
 
 #ifdef NOTYET
     byte *screen;
@@ -1960,7 +1960,7 @@ void logStartup(void)
 
 void logClose(void)
 {
-	//fclose(wolflog);
+	fclose(wolflog);
 }
 
 void doPadPowerOff( s32 chan )

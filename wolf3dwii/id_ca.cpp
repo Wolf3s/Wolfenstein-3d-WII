@@ -762,10 +762,8 @@ void CA_Shutdown (void)
 
 int32_t CA_CacheAudioChunk (int chunk)
 {
-	return 1;
-	
 	int32_t pos = wiiLongSwap(audiostarts[chunk]);
-    int32_t size = wiiLongSwap(audiostarts[chunk+1]-pos);
+    int32_t size = wiiLongSwap(audiostarts[chunk+1]) - pos;
 
 	//fprintf(stderr, "CA_CacheAudioChunk: pos = %d size = %d chunk = %d\n", pos, size, chunk);
 	
@@ -785,11 +783,9 @@ int32_t CA_CacheAudioChunk (int chunk)
 void CA_CacheAdlibSoundChunk (int chunk)
 {
     int32_t pos = wiiLongSwap(audiostarts[chunk]);
-    int32_t size = wiiLongSwap(audiostarts[chunk+1]) -pos;
-
-	//fprintf(stderr, "CA_CacheAdlibSoundChunk: pos = %d size = %d chunk = %d\n", pos, size, chunk);
-
-    if (audiosegs[chunk])
+	int32_t size = wiiLongSwap(audiostarts[chunk+1]) -pos;
+	
+	if (audiosegs[chunk])
         return;                        // already in memory
 
     lseek(audiohandle, pos, SEEK_SET);
@@ -806,22 +802,22 @@ void CA_CacheAdlibSoundChunk (int chunk)
     sound->inst.mScale = *ptr++;
     sound->inst.cScale = *ptr++;
     sound->inst.mAttack = *ptr++;
-    sound->inst.cAttack = *ptr++;
+	sound->inst.cAttack = *ptr++;
     sound->inst.mSus = *ptr++;
-    sound->inst.cSus = *ptr++;
-    sound->inst.mWave = *ptr++;
-    sound->inst.cWave = *ptr++;
-    sound->inst.nConn = *ptr++;
-    sound->inst.voice = *ptr++;
-    sound->inst.mode = *ptr++;
-    sound->inst.unused[0] = *ptr++;
-    sound->inst.unused[1] = *ptr++;
-    sound->inst.unused[2] = *ptr++;
-    sound->block = *ptr++;
+	sound->inst.cSus = *ptr++;
+	sound->inst.mWave = *ptr++;
+	sound->inst.cWave = *ptr++;
+	sound->inst.nConn = *ptr++;
+	sound->inst.voice = *ptr++;
+	sound->inst.mode = *ptr++;
+	sound->inst.unused[0] = *ptr++;
+	sound->inst.unused[1] = *ptr++;
+	sound->inst.unused[2] = *ptr++;
+	sound->block = *ptr++;
 
     read(audiohandle, sound->data, size - ORIG_ADLIBSOUND_SIZE + 1);  // + 1 because of byte data[1]
 
-    audiosegs[chunk]=(byte *) sound;
+	audiosegs[chunk]=(byte *) sound;
 }
 
 //===========================================================================
