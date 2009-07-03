@@ -1,0 +1,22 @@
+/3dfx_mmio.h/1.1/Thu Feb 21 10:07:25 2008//
+/3dfx_regs.h/1.1/Thu Feb 21 10:07:25 2008//
+/SDL_fb3dfx.c/1.1/Thu Feb 21 10:07:25 2008//
+/SDL_fb3dfx.h/1.1/Thu Feb 21 10:07:25 2008//
+/SDL_fbelo.c/1.1/Thu Feb 21 10:07:25 2008//
+/SDL_fbelo.h/1.1/Thu Feb 21 10:07:25 2008//
+/SDL_fbevents.c/1.1/Thu Feb 21 10:07:25 2008//
+/SDL_fbevents_c.h/1.1/Thu Feb 21 10:07:25 2008//
+/SDL_fbkeys.h/1.1/Thu Feb 21 10:07:25 2008//
+/SDL_fbmatrox.c/1.1/Thu Feb 21 10:07:26 2008//
+/SDL_fbmatrox.h/1.1/Thu Feb 21 10:07:26 2008//
+/SDL_fbmouse.c/1.1/Thu Feb 21 10:07:26 2008//
+/SDL_fbmouse_c.h/1.1/Thu Feb 21 10:07:26 2008//
+/SDL_fbriva.c/1.1/Thu Feb 21 10:07:26 2008//
+/SDL_fbriva.h/1.1/Thu Feb 21 10:07:26 2008//
+/SDL_fbvideo.c/1.1/Thu Feb 21 10:07:26 2008//
+/SDL_fbvideo.h/1.1/Thu Feb 21 10:07:26 2008//
+/matrox_mmio.h/1.1/Thu Feb 21 10:07:26 2008//
+/matrox_regs.h/1.1/Thu Feb 21 10:07:26 2008//
+/riva_mmio.h/1.1/Thu Feb 21 10:07:26 2008//
+/riva_regs.h/1.1/Thu Feb 21 10:07:26 2008//
+D

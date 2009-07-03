@@ -1,0 +1,26 @@
+/SDL_ataric2p.S/1.1/Thu Feb 21 10:07:22 2008//
+/SDL_ataric2p_s.h/1.1/Thu Feb 21 10:07:22 2008//
+/SDL_ataridevmouse.c/1.1/Thu Feb 21 10:07:22 2008//
+/SDL_ataridevmouse_c.h/1.1/Thu Feb 21 10:07:22 2008//
+/SDL_atarieddi.S/1.1/Thu Feb 21 10:07:22 2008//
+/SDL_atarieddi_s.h/1.1/Thu Feb 21 10:07:22 2008//
+/SDL_atarievents.c/1.1/Thu Feb 21 10:07:22 2008//
+/SDL_atarievents_c.h/1.1/Thu Feb 21 10:07:22 2008//
+/SDL_atarigl.c/1.1/Thu Feb 21 10:07:22 2008//
+/SDL_atarigl_c.h/1.1/Thu Feb 21 10:07:23 2008//
+/SDL_atarikeys.h/1.1/Thu Feb 21 10:07:23 2008//
+/SDL_atarimxalloc.c/1.1/Thu Feb 21 10:07:23 2008//
+/SDL_atarimxalloc_c.h/1.1/Thu Feb 21 10:07:23 2008//
+/SDL_biosevents.c/1.1/Thu Feb 21 10:07:23 2008//
+/SDL_biosevents_c.h/1.1/Thu Feb 21 10:07:23 2008//
+/SDL_gemdosevents.c/1.1/Thu Feb 21 10:07:23 2008//
+/SDL_gemdosevents_c.h/1.1/Thu Feb 21 10:07:23 2008//
+/SDL_ikbdevents.c/1.1/Thu Feb 21 10:07:23 2008//
+/SDL_ikbdevents_c.h/1.1/Thu Feb 21 10:07:23 2008//
+/SDL_ikbdinterrupt.S/1.1/Thu Feb 21 10:07:23 2008//
+/SDL_ikbdinterrupt_s.h/1.1/Thu Feb 21 10:07:23 2008//
+/SDL_xbiosevents.c/1.1/Thu Feb 21 10:07:23 2008//
+/SDL_xbiosevents_c.h/1.1/Thu Feb 21 10:07:23 2008//
+/SDL_xbiosinterrupt.S/1.1/Thu Feb 21 10:07:23 2008//
+/SDL_xbiosinterrupt_s.h/1.1/Thu Feb 21 10:07:23 2008//
+D

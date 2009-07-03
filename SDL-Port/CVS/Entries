@@ -1,0 +1,60 @@
+/.cvsignore/1.1/Tue Mar  4 10:30:32 2008//
+/BUGS/1.1/Thu Feb 21 10:10:03 2008//
+/Borland.html/1.1/Thu Feb 21 10:10:03 2008//
+/Borland.zip/1.1/Thu Feb 21 10:10:03 2008/-kb/
+/COPYING/1.1/Thu Feb 21 10:10:03 2008//
+/CREDITS/1.1/Thu Feb 21 10:10:03 2008//
+/CWprojects.sea.bin/1.1/Thu Feb 21 10:10:03 2008/-kb/
+/INSTALL/1.1/Thu Feb 21 10:10:03 2008//
+/MPWmake.sea.bin/1.1/Thu Feb 21 10:10:03 2008/-kb/
+/Makefile.dc/1.1/Thu Feb 21 10:10:03 2008//
+/Makefile.gamecube/1.2/Tue Mar  4 19:54:58 2008//
+/Makefile.in/1.1/Thu Feb 21 10:10:03 2008//
+/Makefile.minimal/1.1/Thu Feb 21 10:10:03 2008//
+/README/1.1/Thu Feb 21 10:10:03 2008//
+/README-SDL.txt/1.1/Thu Feb 21 10:10:03 2008//
+/README.AmigaOS/1.1/Thu Feb 21 10:10:03 2008//
+/README.BeOS/1.1/Thu Feb 21 10:10:03 2008//
+/README.CVS/1.1/Thu Feb 21 10:10:03 2008//
+/README.DC/1.1/Thu Feb 21 10:10:03 2008//
+/README.MacOS/1.1/Thu Feb 21 10:10:03 2008//
+/README.MacOSX/1.1/Thu Feb 21 10:10:03 2008//
+/README.MiNT/1.1/Thu Feb 21 10:10:03 2008//
+/README.NDS/1.1/Thu Feb 21 10:10:03 2008//
+/README.NanoX/1.1/Thu Feb 21 10:10:03 2008//
+/README.OS2/1.1/Thu Feb 21 10:10:04 2008//
+/README.PicoGUI/1.1/Thu Feb 21 10:10:04 2008//
+/README.Porting/1.1/Thu Feb 21 10:10:04 2008//
+/README.QNX/1.1/Thu Feb 21 10:10:04 2008//
+/README.Qtopia/1.1/Thu Feb 21 10:10:04 2008//
+/README.RISCOS/1.1/Thu Feb 21 10:10:04 2008//
+/README.SVN/1.1/Thu Feb 21 10:10:04 2008//
+/README.Symbian/1.1/Thu Feb 21 10:10:04 2008//
+/README.Watcom/1.1/Thu Feb 21 10:10:04 2008//
+/README.WinCE/1.1/Thu Feb 21 10:10:05 2008//
+/README.wscons/1.1/Thu Feb 21 10:10:05 2008//
+/SDL.qpg.in/1.1/Thu Feb 21 10:10:05 2008//
+/SDL.spec/1.1/Thu Feb 21 10:10:05 2008//
+/SDL.spec.in/1.1/Thu Feb 21 10:10:05 2008//
+/TODO/1.1/Thu Feb 21 10:10:05 2008//
+/VisualC.html/1.1/Thu Feb 21 10:10:05 2008//
+/VisualC.zip/1.1/Thu Feb 21 10:10:05 2008/-kb/
+/VisualCE.zip/1.1/Thu Feb 21 10:10:05 2008/-kb/
+/Watcom-OS2.zip/1.1/Thu Feb 21 10:10:05 2008/-kb/
+/Watcom-Win32.zip/1.1/Thu Feb 21 10:10:05 2008/-kb/
+/WhatsNew/1.1/Thu Feb 21 10:10:05 2008//
+/Xcode.tar.gz/1.1/Thu Feb 21 10:10:05 2008/-kb/
+/acinclude.m4/1.1/Thu Feb 21 10:10:05 2008//
+/autogen.sh/1.1/Thu Feb 21 10:10:05 2008//
+/configure/1.1/Thu Feb 21 10:10:05 2008//
+/configure.in/1.1/Thu Feb 21 10:10:05 2008//
+/docs.html/1.1/Thu Feb 21 10:10:05 2008//
+/sdl-config.in/1.1/Thu Feb 21 10:10:05 2008//
+/sdl.m4/1.1/Thu Feb 21 10:10:06 2008//
+/sdl.pc.in/1.1/Thu Feb 21 10:10:06 2008//
+/symbian.zip/1.1/Thu Feb 21 10:10:06 2008/-kb/
+D/build-scripts////
+D/docs////
+D/include////
+D/src////
+D/test////

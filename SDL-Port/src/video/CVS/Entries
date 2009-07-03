@@ -1,0 +1,68 @@
+/SDL_RLEaccel.c/1.1/Thu Feb 21 10:07:19 2008//
+/SDL_RLEaccel_c.h/1.1/Thu Feb 21 10:07:19 2008//
+/SDL_blit.c/1.1/Thu Feb 21 10:07:19 2008//
+/SDL_blit.h/1.1/Thu Feb 21 10:07:19 2008//
+/SDL_blit_0.c/1.1/Thu Feb 21 10:07:19 2008//
+/SDL_blit_1.c/1.1/Thu Feb 21 10:07:19 2008//
+/SDL_blit_A.c/1.1/Thu Feb 21 10:07:19 2008//
+/SDL_blit_N.c/1.1/Thu Feb 21 10:07:20 2008//
+/SDL_bmp.c/1.1/Thu Feb 21 10:07:20 2008//
+/SDL_cursor.c/1.1/Thu Feb 21 10:07:20 2008//
+/SDL_cursor_c.h/1.1/Thu Feb 21 10:07:20 2008//
+/SDL_gamma.c/1.1/Thu Feb 21 10:07:20 2008//
+/SDL_glfuncs.h/1.1/Thu Feb 21 10:07:20 2008//
+/SDL_leaks.h/1.1/Thu Feb 21 10:07:20 2008//
+/SDL_pixels.c/1.1/Thu Feb 21 10:07:20 2008//
+/SDL_pixels_c.h/1.1/Thu Feb 21 10:07:20 2008//
+/SDL_stretch.c/1.1/Thu Feb 21 10:07:20 2008//
+/SDL_stretch_c.h/1.1/Thu Feb 21 10:07:20 2008//
+/SDL_surface.c/1.1/Thu Feb 21 10:07:20 2008//
+/SDL_sysvideo.h/1.2/Tue Mar  4 10:30:31 2008//
+/SDL_video.c/1.2/Tue Mar  4 10:30:31 2008//
+/SDL_yuv.c/1.1/Thu Feb 21 10:07:20 2008//
+/SDL_yuv_mmx.c/1.1/Thu Feb 21 10:07:20 2008//
+/SDL_yuv_sw.c/1.1/Thu Feb 21 10:07:20 2008//
+/SDL_yuv_sw_c.h/1.1/Thu Feb 21 10:07:20 2008//
+/SDL_yuvfuncs.h/1.1/Thu Feb 21 10:07:20 2008//
+/blank_cursor.h/1.1/Thu Feb 21 10:07:21 2008//
+/default_cursor.h/1.1/Thu Feb 21 10:07:21 2008//
+/e_log.h/1.1/Thu Feb 21 10:07:21 2008//
+/e_pow.h/1.1/Thu Feb 21 10:07:21 2008//
+/e_sqrt.h/1.1/Thu Feb 21 10:07:21 2008//
+/math_private.h/1.1/Thu Feb 21 10:07:21 2008//
+/mmx.h/1.1/Thu Feb 21 10:07:21 2008//
+D/Xext////
+D/aalib////
+D/ataricommon////
+D/bwindow////
+D/dc////
+D/dga////
+D/directfb////
+D/dummy////
+D/fbcon////
+D/gamecube////
+D/gapi////
+D/gem////
+D/ggi////
+D/ipod////
+D/maccommon////
+D/macdsp////
+D/macrom////
+D/nanox////
+D/nds////
+D/os2fslib////
+D/photon////
+D/picogui////
+D/ps2gs////
+D/qtopia////
+D/quartz////
+D/riscos////
+D/svga////
+D/symbian////
+D/vgl////
+D/wincommon////
+D/windib////
+D/windx5////
+D/wscons////
+D/x11////
+D/xbios////
