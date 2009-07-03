@@ -78,6 +78,7 @@ boolean startgame;
 boolean loadedgame;
 float   mouseadjustment;
 bool    bPowerOff = false;
+int pixeladj = 3;
 
 char    configname[13]="config.";
 
@@ -107,11 +108,6 @@ int     param_audiobuffer = 2048 / (44100 / param_samplerate);
 int     param_mission = 1;
 boolean param_goodtimes = false;
 boolean param_ignorenumchunks = true;
-
-FILE    *wolflog;
-
-void logStartup(void);
-void logClose(void);
 
 /*
 =============================================================================
@@ -148,12 +144,15 @@ void ReadConfig(void)
         //
         word tmp;
         read(file,&tmp,sizeof(tmp));
-        if(tmp!=0xfefa)
+        if(tmp!=0xfefb)  //mrp config modification, if anyone has a config file older than 0xfefb (0xfefa default) the config file is goid
         {
             close(file);
             goto noconfig;
         }
-        read(file,Scores,sizeof(HighScore) * MaxScores);
+        
+
+
+		read(file,Scores,sizeof(HighScore) * MaxScores);
 
         read(file,&sd,sizeof(sd));
         read(file,&sm,sizeof(sm));
@@ -176,6 +175,7 @@ void ReadConfig(void)
         read(file,&viewsize,sizeof(viewsize));
         read(file,&mouseadjustment,sizeof(mouseadjustment));
 		read(file,&interfaceMode,sizeof(interfaceMode));
+		read(file,&pixeladj,sizeof(pixeladj));
 
         close(file);
 
@@ -266,7 +266,7 @@ void WriteConfig(void)
     const int file = open(configname, O_CREAT | O_WRONLY | O_BINARY, 0644);
     if (file != -1)
     {
-        word tmp=0xfefa;
+        word tmp=0xfefb;
         write(file,&tmp,sizeof(tmp));
         write(file,Scores,sizeof(HighScore) * MaxScores);
 
@@ -291,6 +291,7 @@ void WriteConfig(void)
         write(file,&viewsize,sizeof(viewsize));
         write(file,&mouseadjustment,sizeof(mouseadjustment));
 		write(file,&interfaceMode,sizeof(interfaceMode));
+		write(file,&pixeladj,sizeof(pixeladj));
 
         close(file);
     }
@@ -430,16 +431,13 @@ boolean SaveTheGame(FILE *file,int x,int y)
             else
                 actnum=(word)(uintptr_t)objptr;
             fwrite(&actnum,sizeof(actnum),1,file);
-			//fprintf(wolflog, "%d ", actnum);
+			
             checksum = DoChecksum((byte *)&actnum,sizeof(actnum),checksum);
         }
     }
 
-	//fprintf(wolflog, "\n=========================");
-	//Quit(NULL);
-
-
-    fwrite (areaconnect,sizeof(areaconnect),1,file);
+	
+	fwrite (areaconnect,sizeof(areaconnect),1,file);
     fwrite (areabyplayer,sizeof(areabyplayer),1,file);
 
     // player object needs special treatment as it's in WL_AGENT.CPP and not in
@@ -553,9 +551,9 @@ boolean LoadTheGame(FILE *file,int x,int y)
         {
             fread (&actnum,sizeof(word),1,file);
             checksum = DoChecksum((byte *) &actnum,sizeof(word),checksum);
-           // fprintf(wolflog, "%d ", actnum);
+           
 			
-			// actnum = wiiShortSwap(actnum);
+			
 			if(actnum&0x8000)
 				actorat[i][j]=objlist+(actnum&0x7fff);
 			else
@@ -563,10 +561,7 @@ boolean LoadTheGame(FILE *file,int x,int y)
         }
     }
 
-	//fprintf(wolflog, "\n=========================================");
-	//Quit(NULL);
-
-    fread (areaconnect,sizeof(areaconnect),1,file);
+	fread (areaconnect,sizeof(areaconnect),1,file);
     fread (areabyplayer,sizeof(areabyplayer),1,file);
 
     InitActorList ();
@@ -1220,8 +1215,6 @@ void DoJukebox(void)
 
 static void InitGame()
 {
-	logStartup ();
-
 #ifndef SPEARDEMO
     boolean didjukebox=false;
 #endif
@@ -1273,65 +1266,10 @@ static void InitGame()
 
     VH_Startup ();
     IN_Startup ();
-   
-	PM_Startup ();
-
-	//for(int i=0; i<=435; i++)
-	//{
-		
-	//	shape = (t_compshape *) PM_GetSprite(421);
-
-	 //   if(shape == oldshape)
-//			continue;
-
-	//	shape->leftpix = wiiShortSwap(shape->leftpix);
-	//	shape->rightpix = wiiShortSwap(shape->rightpix);
-
-	//	for(int j=0; j<64; j++)
-	//	{
-	//		shape->dataofs[j] = wiiShortSwap(shape->dataofs[j]);
-	//	}
-
-	//	oldshape = shape;
-	//}
-	
-
-//	byte *shape421 = PM_GetPage(PMSpriteStart + 421);
-//	uint32_t size = PM_GetPageSize(PMSpriteStart + 421);
-
-//	fprintf(wolflog, "Size of shape 421: %x\n", size);
-
-//	for(int i=0; i<size; i++)
-//	{
-//		fprintf(wolflog, "%x", shape421[i]);
-//	}
-
-//	fprintf(wolflog, "\n=============================================\n");
-
-
+    PM_Startup ();
 	SD_Startup ();
 	CA_Startup ();
 	US_Startup ();
-
-	// TODO: Will any memory checking be needed someday??
-#ifdef NOTYET
-#ifndef SPEAR
-    if (mminfo.mainmem < 235000L)
-#else
-    if (mminfo.mainmem < 257000L && !MS_CheckParm("debugmode"))
-#endif
-    {
-        byte *screen;
-
-        CA_CacheGrChunk (ERRORSCREEN);
-        screen = grsegs[ERRORSCREEN];
-        ShutdownId();
-/*        memcpy((byte *)0xb8000,screen+7+7*160,17*160);
-        gotoxy (1,23);*/
-        exit(1);
-    }
-#endif
-
 
 //
 // build some tables
@@ -1445,8 +1383,7 @@ void NewViewSize (int width)
 
 void Quit (const char *errorStr, ...)
 {
-	fclose(wolflog);
-
+	
 #ifdef NOTYET
     byte *screen;
 #endif
@@ -1945,23 +1882,6 @@ int game_init(int argc, char **argv)
     return 1;
 }
 
-void logStartup(void)
-{
-	wolflog = fopen( "wolflogwii.txt", "w" );
-
-	if(!wolflog)
-		Quit("Wolflog could not be opened!");
-
-	fprintf(wolflog, "=========================================================================\n");
-	fprintf(wolflog, "Wolfenstein 3D port for Wii by Nick [MrPeanut] Cavallo (wii version)\n");
-	fprintf(wolflog, "=========================================================================\n");
-	fprintf(wolflog, "\n\nPURPOSE: Compare values with the Wii version to see what endian issues can be resolved.\n\nLOG BEGIN\n");
-}
-
-void logClose(void)
-{
-	fclose(wolflog);
-}
 
 void doPadPowerOff( s32 chan )
 {

@@ -45,8 +45,6 @@ int min_wallheight;
 //
 // math tables
 //
-extern FILE *wolflog;
-
 short *pixelangle;
 int32_t finetangent[FINEANGLES/4];
 fixed sintable[ANGLES+ANGLES/4];

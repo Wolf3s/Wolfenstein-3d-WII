@@ -113,9 +113,6 @@ static  int                     sqHackLen;
 static  int                     sqHackSeqLen;
 static  longword                sqHackTime;
 
-extern FILE *wolflog;
-
-
 static void SDL_SoundFinished(void)
 {
 	SoundNumber   = (soundnames)0;

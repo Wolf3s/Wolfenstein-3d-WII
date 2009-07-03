@@ -24,6 +24,8 @@
 =============================================================================
 */
 
+
+
 extern bool bPowerOff;
 
 boolean madenoise;              // true when shooting or screaming
@@ -351,12 +353,19 @@ void PollMouseMove (void)
 	
 	SDL_GetMouseState(&mousexmove, &mouseymove);
 	
-	mousexmove -= screenWidth  / 2;
-    mouseymove -= screenHeight / 2;
+	
 
-    controlx += mousexmove * mouseadjustment; //*// 10 / 20;
-	//controlx += mousexmove * 10 / (13 - mouseadjustment);
-    //controly += mouseymove * 20 / (13 - mouseadjustment);
+	if( ( mousexmove > 160 + ( pixeladj * 4 ) ) || ( mousexmove < 160 - ( pixeladj * 4) ) )
+	{
+		mousexmove -= screenWidth  / 2;
+		
+
+		controlx += mousexmove * mouseadjustment; //*// 10 / 20;
+		//controlx += mousexmove * 10 / (13 - mouseadjustment);
+		//controly += mouseymove * 20 / (13 - mouseadjustment);
+	}
+
+	
 }
 
 
@@ -412,19 +421,19 @@ void PollJoystickMove (void)
     
 	if(buttonstate[bt_run])  // if your run button is pressed, crank that shit!
 	{
-		if (joyy > 16 || buttonstate[bt_movebackward])
+		if (joyy > 20 || buttonstate[bt_movebackward])
 			controly += delta;
 		
-		else if (joyy < -16 || buttonstate[bt_moveforward])
+		else if (joyy < -20 || buttonstate[bt_moveforward])
 			controly -= delta;
 	}
 
 	else
 	{
-		if (joyy > 16 || buttonstate[bt_movebackward])
+		if (joyy > 20 || buttonstate[bt_movebackward])
         controly += joyy *0.6;
 		
-		else if (joyy < -16 || buttonstate[bt_moveforward])  // I picked .6 because it's a little more than 1/2 slower than full run
+		else if (joyy < -20 || buttonstate[bt_moveforward])  // I picked .6 because it's a little more than 1/2 slower than full run
         controly += joyy *0.6;                                // anything lower feels weird on the gc gamepad - MrPeanut
 	}
 

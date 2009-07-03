@@ -15,11 +15,14 @@
 
 #include "wl_def.h"
 #include "wiistub.h"
-#pragma hdrstop
+
 
 extern int lastgamemusicoffset;
 extern int numEpisodesMissing;
 extern bool bPowerOff;
+
+
+int selection = 0;
 
 //
 // PRIVATE PROTOTYPES
@@ -135,7 +138,7 @@ enum { CTL_IRSENS, CTL_ALLGUNS, CTL_INFAMMO, CTL_GODMODE };
 CP_itemtype MiscMenu[] = {
 	{1, "IR Sensitivity", MouseSensitivity},
 	{1, "Cheat: All Guns", 0},
-	{1, "Cheat: Infinate Ammo", 0},
+	{1, "Cheat: Infinite Ammo", 0},
 	{1, "Cheat: God Mode", 0}
 };
 
@@ -1953,48 +1956,99 @@ CP_Control (int)
 // DRAW MOUSE SENSITIVITY SCREEN
 //
 void
-DrawMouseSens (void)
+DrawMouseSens (int refresh)
 {
-#ifdef JAPAN
-    CA_CacheScreen (S_MOUSESENSPIC);
-#else
-    ClearMScreen ();
+	char *deadzonestring;
+	
+	ClearMScreen();
+
     VWB_DrawPic (112, 184, C_MOUSELBACKPIC);
-#ifdef SPANISH
-    DrawWindow (10, 80, 300, 43, BKGDCOLOR);
-#else
-    DrawWindow (10, 80, 300, 30, BKGDCOLOR);
-#endif
+	DrawWindow(10, 36, 300, 60, BKGDCOLOR);
 
-    WindowX = 0;
+	WindowX = 0;
     WindowW = 320;
-    PrintY = 82;
-    SETFONTCOLOR (READCOLOR, BKGDCOLOR);
-    US_CPrint (STR_MOUSEADJ);
+    PrintY = 38;
+    
+	if(selection == 0)
+		SETFONTCOLOR(READCOLOR, BKGDCOLOR);
+	
+	US_CPrint (STR_MOUSEADJ);
+	SETFONTCOLOR (TEXTCOLOR, BKGDCOLOR);
 
-    SETFONTCOLOR (TEXTCOLOR, BKGDCOLOR);
-#ifdef SPANISH
     PrintX = 14;
-    PrintY = 95 + 13;
-    US_Print (STR_SLOW);
-    PrintX = 252;
-    US_Print (STR_FAST);
-#else
-    PrintX = 14;
-    PrintY = 95;
-    US_Print (STR_SLOW);
-    PrintX = 269;
-    US_Print (STR_FAST);
-#endif
-#endif
+    PrintY = 51;
+    if(refresh < 3)
+		US_Print (STR_SLOW);
+    
+	PrintX = 269;
+    if(refresh < 3)
+		US_Print (STR_FAST);
 
-    VWB_Bar (60, 97, 200, 10, TEXTCOLOR);
-    DrawOutline (60, 97, 200, 10, 0, HIGHLIGHT);
-    DrawOutline (60 + 20 * ( mouseadjustment * 10 ), 97, 20, 10, 0, READCOLOR);
-    VWB_Bar (61 + 20 * ( mouseadjustment * 10 ), 98, 19, 9, READHCOLOR);
+//	VWB_Bar (60, 51, 200, 10, TEXTCOLOR);
 
-    VW_UpdateScreen ();
-    MenuFadeIn ();
+	PrintY = 64;
+	
+	if(selection == 1)
+		SETFONTCOLOR(READCOLOR, BKGDCOLOR);
+	
+	US_CPrint ("Adjust Mouse DeadZone");
+	SETFONTCOLOR (TEXTCOLOR, BKGDCOLOR);
+	
+
+	PrintX = 10; PrintY = 106;
+	US_CPrint("DeadZone represents the number");
+	PrintY = 119;
+	US_CPrint("of pixels from the center of the");
+	PrintY = 132;
+	US_CPrint("screen that are discarded");
+
+	if(selection == 1)
+	{
+		PrintY = 145;
+		sprintf(deadzonestring, "DeadZone Value: %d", pixeladj * 4);
+		US_CPrint(deadzonestring);
+	}
+
+
+	if(refresh == 3)
+	{
+		PrintX = 60;
+		PrintY = 51;
+		US_CPrint("Thank You");
+		PrintX = 60;
+		PrintY = 77;
+		US_CPrint("Thank You");
+		VW_UpdateScreen ();
+	}
+	
+	else
+	{
+		
+		VWB_Bar (60, 51, 200, 10, TEXTCOLOR);
+		DrawOutline (60, 51, 200, 10, 0, HIGHLIGHT);
+		DrawOutline (60 + 20 * ( mouseadjustment * 10 ), 51, 20, 10, 0, READCOLOR); // that's for the outline of yellow box
+    
+		if(selection == 0)
+			VWB_Bar (61 + 20 * ( mouseadjustment * 10 ), 52, 19, 9, READHCOLOR); // that's for inside of selector box (yellow)
+
+		
+		VWB_Bar (60, 77, 200, 10, TEXTCOLOR);
+		DrawOutline (60, 77, 200, 10, 0, HIGHLIGHT);
+		DrawOutline (60 + 20 * ( pixeladj ), 77, 20, 10, 0, READCOLOR); // that's for the outline of yellow box
+    
+		if(selection == 1)
+			VWB_Bar (61 + 20 * ( pixeladj ), 78, 19, 9, READHCOLOR); // that's for inside of selector box (yellow)
+
+		VW_UpdateScreen ();
+	}
+    
+	if(refresh == 0)
+		MenuFadeIn ();
+
+
+	if(refresh == 3)
+		SDL_Delay(500);
+
 }
 
 
@@ -2007,11 +2061,18 @@ MouseSensitivity (int)
 {
     ControlInfo ci;
     int exit = 0;
-	float newMA;
+	
+	float newMA; 
+	float oldMA;
+	int oldPA;
+	
+	selection = 0;
+	
+	newMA = mouseadjustment * 10;
+	oldMA = mouseadjustment;
+	oldPA = pixeladj;
 
-
-    newMA = mouseadjustment * 10;
-    DrawMouseSens ();
+	DrawMouseSens (0);
     do
     {
         SDL_Delay(5);
@@ -2019,33 +2080,72 @@ MouseSensitivity (int)
         switch (ci.dir)
         {
             case dir_North:
+				{
+					selection = 0;
+					DrawMouseSens(1);
+					break;
+				}
             case dir_West:
-                if (newMA)
-                {
-                    newMA--;
-                    VWB_Bar (60, 97, 200, 10, TEXTCOLOR);
-                    DrawOutline (60, 97, 200, 10, 0, HIGHLIGHT);
-                    DrawOutline (60 + 20 * newMA, 97, 20, 10, 0, READCOLOR);
-                    VWB_Bar (61 + 20 * newMA, 98, 19, 9, READHCOLOR);
-                    VW_UpdateScreen ();
-                    SD_PlaySound (MOVEGUN1SND);
-                    TicDelay(20);
-                }
-                break;
+                if(selection == 0)
+				{
+					if (newMA)
+					{	
+						newMA--;
+						mouseadjustment = newMA / 10;
+						DrawMouseSens(1);
+						SD_PlaySound (MOVEGUN1SND);
+						TicDelay(20);
+					}
+					break;
+				}
+                
+				if(selection == 1)
+				{
+					if(pixeladj)
+					{
+						pixeladj--;
+						DrawMouseSens(1);
+						SD_PlaySound (MOVEGUN1SND);
+						TicDelay(20);
+					}
 
-            case dir_South:
+					break;
+				}
+			case dir_South:
+				{
+					selection = 1;
+					DrawMouseSens(1);
+					break;
+				}
             case dir_East:
-                if (newMA < 9)
-                {
-                    newMA++;
-                    VWB_Bar (60, 97, 200, 10, TEXTCOLOR);
-                    DrawOutline (60, 97, 200, 10, 0, HIGHLIGHT);
-                    DrawOutline (60 + 20 * newMA, 97, 20, 10, 0, READCOLOR);
-                    VWB_Bar (61 + 20 * newMA, 98, 19, 9, READHCOLOR);
-                    VW_UpdateScreen ();
-                    SD_PlaySound (MOVEGUN1SND);
-                    TicDelay(20);
-                }
+				{
+					if(selection == 0)
+					{
+						if (newMA < 9)
+						{	
+							newMA++;
+							mouseadjustment = newMA / 10;
+							DrawMouseSens(1);
+							SD_PlaySound (MOVEGUN1SND);
+							TicDelay(20);
+						}
+					
+						break;
+					}
+				}
+				
+				if(selection == 1)
+				{
+					if(pixeladj < 9)
+					{
+						pixeladj++;
+						DrawMouseSens(1);
+						SD_PlaySound (MOVEGUN1SND);
+						TicDelay(20);
+					}
+
+					break;
+				}
                 break;
         }
 
@@ -2060,11 +2160,13 @@ MouseSensitivity (int)
     if (exit == 2)
     {
         SD_PlaySound (ESCPRESSEDSND);
+		mouseadjustment = oldMA;
+		pixeladj = oldPA;
     }
     else
 	{
 		SD_PlaySound (SHOOTSND);
-		mouseadjustment = newMA / 10;
+		DrawMouseSens(3);
 	}
     
 	WaitKeyUp ();

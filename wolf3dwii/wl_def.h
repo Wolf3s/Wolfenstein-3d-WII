@@ -915,6 +915,7 @@ extern  int      dirangle[9];
 
 extern  float    mouseadjustment;
 extern  int      shootdelta;
+extern  int      pixeladj;
 extern  unsigned screenofs;
 
 extern  boolean  startgame;

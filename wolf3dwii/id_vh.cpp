@@ -8,8 +8,6 @@ int	    px,py;
 byte	fontcolor,backcolor;
 int	    fontnumber;
 
-extern FILE *wolflog;
-
 //==========================================================================
 
 void VWB_DrawPropString(const char* string)

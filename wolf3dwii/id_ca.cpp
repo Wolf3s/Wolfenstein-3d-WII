@@ -109,9 +109,6 @@ int32_t   chunkcomplen,chunkexplen;
 
 SDMode oldsoundmode;
 
-extern FILE *wolflog;
-
-
 static int32_t GRFILEPOS(const size_t idx)
 {
 	assert(idx < lengthof(grstarts));

@@ -163,7 +163,7 @@ void DrawLoadSaveScreen(int loadsave);
 void DrawNewEpisode(void);
 void DrawNewGame(void);
 void DrawChangeView(int view);
-void DrawMouseSens(void);
+void DrawMouseSens(int refresh);
 void DrawCtlScreen(void);
 void DrawMiscOptsScreen( void );
 void DrawCustomScreen(void);

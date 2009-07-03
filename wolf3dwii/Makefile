@@ -98,6 +98,10 @@ export OUTPUT	:=	$(CURDIR)/$(TARGET)
 $(BUILD):
 	@[ -d $@ ] || mkdir -p $@
 	@make --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
+	
+	echo ... backing up to the deployment smb share ...
+	
+	cp -v -r * ../wolf3d-deploy
 
 #---------------------------------------------------------------------------------
 clean:

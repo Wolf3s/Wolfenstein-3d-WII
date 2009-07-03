@@ -62,8 +62,6 @@ SDL_Color gamepal[]={
 
 CASSERT(lengthof(gamepal) == 256)
 
-extern FILE *wolflog;
-
 //===========================================================================
 
 

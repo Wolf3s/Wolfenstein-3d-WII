@@ -15,8 +15,6 @@ size_t PMPageDataSize;
 // The last pointer points one byte after the last page.
 uint8_t **PMPages;
 
-extern FILE *wolflog;
-
 void PM_Startup()
 {
     char fname[13] = "vswap.";
