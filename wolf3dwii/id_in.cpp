@@ -163,15 +163,16 @@ int IN_ChangeInterface(int mode)
 		joystickenabled = true;
 		mouseenabled = false;
 		IN_ConfigureButtonMap( );
-		break;
+	break;
 	case CONTROL_MODERN:
 		joystickenabled = true;
 		mouseenabled = true;
 		IN_ConfigureButtonMap( );
 		break;
 	}
-
+	return 1;
 }
+
 void IN_ConfigureButtonMap( void )
 {
 	switch( interfaceMode )

@@ -62,7 +62,7 @@ typedef uint8_t byte;
 typedef uint16_t word;
 typedef int32_t fixed;
 typedef uint32_t longword;
-//typedef int8_t boolean;
+typedef signed char wboolean; //mrp2010 boolean problem
 typedef void * memptr;
 
 typedef struct
@@ -726,7 +726,7 @@ typedef void (* statefunc) (void *);
 
 typedef struct statestruct
 {
-    boolean rotate;
+    short   rotate;  //mrp2010 -- we needed to change this, their code was using the numeric value of boolean...
     short   shapenum;           // a shapenum of -1 means get from ob->temp1
     short   tictime;
     void    (*think) (void *),(*action) (void *);
@@ -970,7 +970,6 @@ void    ShowActStatus();
 
 void    PlayDemo (int demonumber);
 void    RecordDemo (void);
-
 
 #ifdef SPEAR
 extern  int32_t            spearx,speary;

@@ -1228,7 +1228,10 @@ static void InitGame()
         printf("Unable to init SDL: %s\n", SDL_GetError());
         exit(1);
     }
-    atexit(SDL_Quit);
+    
+	wiiLogWriteLine("SDL_Init(): Succeeded.\n");
+	
+	atexit(SDL_Quit);
 
 	WPAD_SetPowerButtonCallback( doPadPowerOff ); 
 
@@ -1239,12 +1242,15 @@ static void InitGame()
             printf("No joysticks are available to SDL!\n");
         else
             printf("The joystick index must be between -1 and %i!\n", numJoysticks - 1);
-        exit(1);
+        
+		exit(1);
     }
 
     
 	
 	SignonScreen ();
+
+	wiiLogWriteLine("SignonScreen(): Succeeded.\n");
 
 
 
@@ -1265,16 +1271,24 @@ static void InitGame()
 #endif
 
     VH_Startup ();
+	wiiLogWriteLine("VH_Startup(): Successful.\n");
     IN_Startup ();
-    PM_Startup ();
+	wiiLogWriteLine("IN_Startup(): Successful.\n");
+	PM_Startup ();
+	wiiLogWriteLine("PM_Startup(): Successful.\n");
 	SD_Startup ();
+	wiiLogWriteLine("SD_Startup(): Successful.\n");
 	CA_Startup ();
+	wiiLogWriteLine("CA_Startup(): Successful.\n");
 	US_Startup ();
+	wiiLogWriteLine("US_Startup(): Successful.\n");
 
 //
 // build some tables
 //
     InitDigiMap ();
+	wiiLogWriteLine("InitDigiMap(): Successful.\n");
+
 	ReadConfig ();
 	SetupSaveGames();
 //
@@ -1383,6 +1397,8 @@ void NewViewSize (int width)
 
 void Quit (const char *errorStr, ...)
 {
+
+	wiiCloseLogFile();
 	
 #ifdef NOTYET
     byte *screen;
@@ -1866,14 +1882,8 @@ int game_init(int argc, char **argv)
  //   CheckParameters(argc, argv);
 #endif
 
-	
-    
 	CheckForEpisodes();
-
-	
-
-	
-
+    wiiLogWriteLine("CheckForEpisodes(): Succeeded.\n");
     InitGame();
 
     DemoLoop();

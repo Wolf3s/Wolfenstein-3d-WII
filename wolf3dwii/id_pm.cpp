@@ -40,7 +40,7 @@ void PM_Startup()
      
 	for( k = 0; k < ChunksInFile; k++ )
 	{
-		pageOffsets[k] = wiiLongSwap(pageOffsets[k]);
+		pageOffsets[k] = (uint32_t)wiiLongSwap(pageOffsets[k]);
 	}
 
 	word *pageLengths = (word *) malloc(ChunksInFile * sizeof(word));
@@ -50,7 +50,7 @@ void PM_Startup()
 	 
 	for( j = 0; j < ChunksInFile; j++)
 	{
-		pageLengths[j] = wiiShortSwap(pageLengths[j]);
+		pageLengths[j] = (word)wiiShortSwap(pageLengths[j]);
 	}
 
 	fseek(file, 0, SEEK_END);
@@ -96,6 +96,9 @@ void PM_Startup()
 	
 	if((pageOffsets[ChunksInFile - 1] - dataStart + alignPadding) & 1)
         alignPadding++;
+
+	wiiLogWriteLine("PM_Startup:: alignPadding = %x\n", alignPadding);
+	wiiLogWriteLine("PM_Startup:: pageDataSize = %x\n", pageDataSize);
 
 	PMPageDataSize = (size_t) pageDataSize + alignPadding;
 	PMPageData = (uint32_t *) malloc(PMPageDataSize);

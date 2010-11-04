@@ -1102,6 +1102,7 @@ void Cmd_Fire (void)
         attackinfo[gamestate.weapon][gamestate.attackframe].tics;
     gamestate.weaponframe =
         attackinfo[gamestate.weapon][gamestate.attackframe].frame;
+
 }
 
 //===========================================================================

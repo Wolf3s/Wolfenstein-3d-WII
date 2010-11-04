@@ -807,7 +807,7 @@ int CalcRotate (objtype *ob)
 
 void ScaleShape (int xcenter, int shapenum, unsigned height, uint32_t flags)
 {
-    t_compshape *shape;
+	t_compshape *shape;
     unsigned scale,pixheight;
     unsigned starty,endy;
     word *cmdptr;
@@ -831,10 +831,10 @@ void ScaleShape (int xcenter, int shapenum, unsigned height, uint32_t flags)
 #endif
 
     shape = (t_compshape *) PM_GetSprite(shapenum);
-	leftpix = wiiShortSwap(shape->leftpix);
-	rightpix = wiiShortSwap(shape->rightpix);
+	leftpix = (word)wiiShortSwap(shape->leftpix);
+	rightpix = (word)wiiShortSwap(shape->rightpix);
 
-    scale=height>>3;                 // low three bits are fractional
+	scale=height>>3;                 // low three bits are fractional
     if(!scale) return;   // too close or far away
 
     pixheight=scale*SPRITESCALEFACTOR;
@@ -853,7 +853,7 @@ void ScaleShape (int xcenter, int shapenum, unsigned height, uint32_t flags)
         {
             if(lpix<0) lpix=0;
             if(rpix>viewwidth) rpix=viewwidth,i=rightpix+1;
-            cline=(byte *)shape + wiiShortSwap(*cmdptr);
+            cline=(byte *)shape + (word)wiiShortSwap(*cmdptr);
             while(lpix<rpix)
             {
                 if(wallheight[lpix]<=(int)height)
@@ -918,8 +918,8 @@ void SimpleScaleShape (int xcenter, int shapenum, unsigned height)
 	word rightpix = 0;
 
     shape = (t_compshape *) PM_GetSprite(shapenum);
-	leftpix = wiiShortSwap(shape->leftpix);
-	rightpix = wiiShortSwap(shape->rightpix);
+	leftpix = (word)wiiShortSwap(shape->leftpix);
+	rightpix = (word)wiiShortSwap(shape->rightpix);
 
 	scale=height>>1;
 	pixheight=scale*SPRITESCALEFACTOR;
@@ -937,7 +937,7 @@ void SimpleScaleShape (int xcenter, int shapenum, unsigned height)
         {
             if(lpix<0) lpix=0;
             if(rpix>viewwidth) rpix=viewwidth,i=rightpix+1;
-            cline = (byte *)shape + wiiShortSwap(*cmdptr);
+            cline = (byte *)shape + (word)wiiShortSwap(*cmdptr);
 			
 			while(lpix<rpix)
             {
@@ -1108,7 +1108,16 @@ void DrawScaleds (void)
         }
         else
             obj->flags &= ~FL_VISABLE;
-    }
+    
+		
+		//mrp2010
+
+		if (obj->obclass == mutantobj)
+		{
+			wiiLogWriteLine("DrawScaleds():: Encounterd obj:mutantobj -- shapenum %d\n", obj->state->shapenum);
+		}
+	
+	}
 
 //
 // draw from back to front
@@ -1141,6 +1150,7 @@ void DrawScaleds (void)
             ScaleShape(farthest->viewx, farthest->shapenum, farthest->viewheight, farthest->flags);
 
         farthest->viewheight = 32000;
+		
     }
 }
 
@@ -1178,7 +1188,9 @@ void DrawPlayerWeapon (void)
     {
         shapenum = weaponscale[gamestate.weapon]+gamestate.weaponframe;
         SimpleScaleShape(viewwidth/2,shapenum,viewheight+1);
-    }
+		//ScaleShape(viewwidth/2,SPR_MUT_S_1,viewheight+1, NULL);
+	}
+		
 
     if (demorecord || demoplayback)
         SimpleScaleShape(viewwidth/2,SPR_DEMO,viewheight+1);

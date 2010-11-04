@@ -79,6 +79,8 @@ extern "C"           // we need C style linkage for SDL_Main
 
 	printf("%s\n", curdir);
 
+	wiiInitializeLogFile();
+
 	game_init( argc, argv );
 	return(1);
 	
@@ -137,14 +139,36 @@ void wiiProcessFont(int chunk)
 
 }
 
+void wiiInitializeLogFile(void)
+{
+	wiilog = fopen("wiilog.txt", "wt");
 
+	if(!wiilog)
+		exit(1);
 
+	fprintf(wiilog, "====================\n");
+	fprintf(wiilog, "Wolfenstein 3D - Wii\n");
+	fprintf(wiilog, "Ported by MrPeanut\n");
+	fprintf(wiilog, "Based on Wolf4SDL v1.6\n");
+	fprintf(wiilog, "====================\n\n");
+}
 
+void wiiCloseLogFile(void)
+{
+	fprintf(wiilog, "log_close() successful.");
+	fclose(wiilog);
+	wiilog = NULL;
+}
 
-	
-
-
-
-
-
+void wiiLogWriteLine( const char *msg, ... )
+{
+	char strbuf[256];
+    va_list vlist;
+    va_start(vlist, msg);
+    int len = vsnprintf(strbuf, sizeof(strbuf), msg, vlist);
+    va_end(vlist);
+    if(len <= -1 || len >= sizeof(strbuf))
+        strbuf[sizeof(strbuf) - 1] = 0;
+    fputs(strbuf, wiilog);
+}
 

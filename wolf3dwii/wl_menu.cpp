@@ -1958,8 +1958,6 @@ CP_Control (int)
 void
 DrawMouseSens (int refresh)
 {
-	char *deadzonestring;
-	
 	ClearMScreen();
 
     VWB_DrawPic (112, 184, C_MOUSELBACKPIC);
@@ -2005,8 +2003,7 @@ DrawMouseSens (int refresh)
 	if(selection == 1)
 	{
 		PrintY = 145;
-		sprintf(deadzonestring, "DeadZone Value: %d", pixeladj * 4);
-		US_CPrint(deadzonestring);
+		US_CPrintf("DeadZone Value: %d", pixeladj * 4);
 	}
 
 
@@ -3565,7 +3562,7 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
                 break;
         }
 
-        if( interfaceMode == CONTROL_MODERN )
+		if( interfaceMode == CONTROL_MODERN )
 		{
 			if (ci.button0 || Keyboard[sc_Enter] || Keyboard[sc_Space])
 				exit = 1;
@@ -3582,10 +3579,9 @@ HandleMenu (CP_iteminfo * item_i, CP_itemtype * items, void (*routine) (int w))
 			if (ci.button1 && !Keyboard[sc_Alt] || Keyboard[sc_Escape] || Keyboard[sc_Space]) // mrp changed so spacebar (b button) exits menu
 				exit = 2;
 		}
-
-
-    }
-    while (!exit);
+}
+    
+while (!exit);
 
 
     IN_ClearKeysDown ();
@@ -3928,7 +3924,8 @@ Confirm (const char *string)
         ShootSnd ();
     }
 #else
-    if( interfaceMode == CONTROL_MODERN )
+    
+	if( interfaceMode == CONTROL_MODERN )
 	{
 		if( Keyboard[sc_Space] )
 		{
@@ -3944,6 +3941,7 @@ Confirm (const char *string)
 			ShootSnd ();
 		}
 	}
+	
 #endif
 
     IN_ClearKeysDown ();
@@ -4015,7 +4013,6 @@ GetYorN (int x, int y, int pic)
     return xit;
 }
 #endif
-
 
 ////////////////////////////////////////////////////////////////////
 //

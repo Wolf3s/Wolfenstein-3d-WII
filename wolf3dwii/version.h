@@ -5,10 +5,10 @@
 
 /* Defines used for different versions */
 
-//#define SPEAR
+#define SPEAR
 //#define SPEARDEMO
-#define UPLOAD
-//#define GOODTIMES
+//#define UPLOAD
+#define GOODTIMES
 #define CARMACIZED
 //#define APOGEE_1_0
 //#define APOGEE_1_1

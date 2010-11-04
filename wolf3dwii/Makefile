@@ -25,7 +25,7 @@ INCLUDES	:=
 # options for code generation
 #---------------------------------------------------------------------------------
 
-CFLAGS	= -O2 -Wall $(MACHDEP) $(INCLUDE)
+CFLAGS	= -O2 -w $(MACHDEP) $(INCLUDE) -Dboolean=bool
 CXXFLAGS	=	$(CFLAGS)
 
 LDFLAGS	=	-g $(MACHDEP) -Wl,-Map,$(notdir $@).map
@@ -33,7 +33,7 @@ LDFLAGS	=	-g $(MACHDEP) -Wl,-Map,$(notdir $@).map
 #---------------------------------------------------------------------------------
 # any extra libraries we wish to link with the project
 #---------------------------------------------------------------------------------
-LIBS	:=	-lSDL_mixer -ltremor -lSDL -ldb -lfat -lwiiuse -lbte -logc -lm
+LIBS	:=	-lSDL_mixer -lvorbisidec -lSDL -ldb -lfat -lwiikeyboard -lwiiuse -lbte -logc -lm
 
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing

@@ -470,8 +470,8 @@ void CAL_SetupGrFile (void)
 
 	for( int i = 0; i < sizeof(grhuffman) / sizeof(huffnode); i++)
 	{
-		grhuffman[i].bit0 = wiiShortSwap(grhuffman[i].bit0);
-		grhuffman[i].bit1 = wiiShortSwap(grhuffman[i].bit1);
+		grhuffman[i].bit0 = (word)wiiShortSwap(grhuffman[i].bit0);
+		grhuffman[i].bit1 = (word)wiiShortSwap(grhuffman[i].bit1);
 	}
 
 	close(handle);
@@ -572,7 +572,7 @@ void CAL_SetupMapFile (void)
     mapfiletype *tinf=(mapfiletype *) malloc(sizeof(mapfiletype));
     CHECKMALLOCRESULT(tinf);
     read(handle, tinf, length);
-	tinf->RLEWtag = wiiShortSwap(tinf->RLEWtag);
+	tinf->RLEWtag = (word)wiiShortSwap(tinf->RLEWtag);
 	
 	for( int i = 0; i < sizeof(tinf->headeroffsets) / sizeof(int32_t); i++)
 		tinf->headeroffsets[i] = wiiLongSwap(tinf->headeroffsets[i]);
@@ -614,15 +614,15 @@ void CAL_SetupMapFile (void)
         lseek(maphandle,pos,SEEK_SET);
         read (maphandle,(memptr)mapheaderseg[i],sizeof(maptype));
     
-		mapheaderseg[i]->height = wiiShortSwap(mapheaderseg[i]->height);
+		mapheaderseg[i]->height = (word)wiiShortSwap(mapheaderseg[i]->height);
 		
 		for( int j = 0; j < sizeof(mapheaderseg[i]->planelength) / sizeof(word); j++)
-			mapheaderseg[i]->planelength[j] = wiiShortSwap(mapheaderseg[i]->planelength[j]);
+			mapheaderseg[i]->planelength[j] = (word)wiiShortSwap(mapheaderseg[i]->planelength[j]);
 
 		for( int j = 0; j < sizeof(mapheaderseg[i]->planestart) / sizeof(int32_t); j++)
 			mapheaderseg[i]->planestart[j] = wiiLongSwap(mapheaderseg[i]->planestart[j]);
 
-		mapheaderseg[i]->width = wiiShortSwap(mapheaderseg[i]->width);
+		mapheaderseg[i]->width = (word)wiiShortSwap(mapheaderseg[i]->width);
 	
 	}
 
@@ -761,6 +761,8 @@ int32_t CA_CacheAudioChunk (int chunk)
 {
 	int32_t pos = wiiLongSwap(audiostarts[chunk]);
     int32_t size = wiiLongSwap(audiostarts[chunk+1]) - pos;
+
+	wiiLogWriteLine("CA_CacheAudioChunk: #%d |||| POS %d |||| SIZE %d\n", chunk, pos, size);
 
 	//fprintf(stderr, "CA_CacheAudioChunk: pos = %d size = %d chunk = %d\n", pos, size, chunk);
 	

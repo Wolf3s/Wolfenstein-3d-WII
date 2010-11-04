@@ -18,3 +18,4 @@ void wiiLogWriteLine( const char *msg, ... );
 void wiiSleepUntilKbHit(void);
 void wiiProcessFont(int chunk);
 void wiiProcessSegs(word *segs);
+void wiiCloseLogFile(void);

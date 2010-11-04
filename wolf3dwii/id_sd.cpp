@@ -517,7 +517,6 @@ void SD_SetPosition(int channel, int leftpos, int rightpos)
             break;
     }
 }
-/*
 Sint16 GetSample(float csample, byte *samples, int size)
 {
     float s0=0, s1=0, s2=0;
@@ -534,28 +533,12 @@ Sint16 GetSample(float csample, byte *samples, int size)
     else if(intval > 32767) intval = 32767;
     return (Sint16) intval;
 }
-*/
-Sint16 GetSample(int csample, byte *samples, int size)
-{
-    int s0=0, s1=0, s2=0;
-    int cursample = (int) csample;
-    int sf = csample - (int) cursample;
-
-    if(cursample-1 >= 0) s0 = (int) (samples[cursample-1] - 128);
-    s1 = (int) (samples[cursample] - 128);
-    if(cursample+1 < size) s2 = (int) (samples[cursample+1] - 128);
-
-    int val = s0*sf*(sf-1)/2 - s1*(sf*sf-1) + s2*(sf+1)*sf/2;
-    int32_t intval = (int32_t) (val * 256);
-    if(intval < -32768) intval = -32768;
-    else if(intval > 32767) intval = 32767;
-    return (Sint16) intval;
-}
-
 
 void SD_PrepareSound(int which)
 {
-    if(DigiList == NULL)
+	//wiiLogWriteLine("SD_PrepareSound(): Preparing sound #%d -- page %d -- length %d\n", which, DigiList[which].startpage, DigiList[which].length);
+	
+	if(DigiList == NULL)
         Quit("SD_PrepareSound(%i): DigiList not initialized!\n", which);
 
     int page = DigiList[which].startpage;
@@ -576,17 +559,17 @@ void SD_PrepareSound(int which)
     headchunk head = {{'R','I','F','F'}, 0, {'W','A','V','E'},
         {'f','m','t',' '}, 0x10, 0x0001, 1, param_samplerate, param_samplerate*2, 2, 16};
 
-	head.bitspersample = wiiShortSwap(head.bitspersample);
-	head.bytespersample = wiiShortSwap(head.bytespersample);
-	head.bytespersec = wiiLongSwap(head.bytespersec);
-	head.channels = wiiShortSwap(head.channels);
-	head.formatlen = wiiLongSwap(head.formatlen);
-	head.samplerate = wiiLongSwap(head.samplerate);
-	head.val0x0001 = wiiShortSwap(head.val0x0001);
+	head.bitspersample = (word)wiiShortSwap(head.bitspersample);
+	head.bytespersample = (word)wiiShortSwap(head.bytespersample);
+	head.bytespersec = (longword)wiiLongSwap(head.bytespersec);
+	head.channels = (word)wiiShortSwap(head.channels);
+	head.formatlen = (longword)wiiLongSwap(head.formatlen);
+	head.samplerate = (longword)wiiLongSwap(head.samplerate);
+	head.val0x0001 = (word)wiiShortSwap(head.val0x0001);
 	wavechunk dhead = {{'d', 'a', 't', 'a'}, destsamples*2};
-	dhead.chunklength = wiiLongSwap(dhead.chunklength);
+	dhead.chunklength = (longword)wiiLongSwap(dhead.chunklength);
     head.filelenminus8 = sizeof(head) + destsamples*2;  // (sizeof(dhead)-8 = 0)
-	head.filelenminus8 = wiiLongSwap(head.filelenminus8);
+	head.filelenminus8 = (longword)wiiLongSwap(head.filelenminus8);
 
 	memcpy(wavebuffer, &head, sizeof(head));
     memcpy(wavebuffer+sizeof(head), &dhead, sizeof(dhead));
@@ -600,11 +583,39 @@ void SD_PrepareSound(int which)
     
 	for(int i=0; i<destsamples; i++, cursample+=samplestep)
     {
-        newsamples[i] = wiiShortSwap(GetSample((int)size * (int)i / (int)destsamples,
+        newsamples[i] = wiiShortSwap(GetSample((float)size * (float)i / (float)destsamples,
             origsamples, size));
     }
-    SoundBuffers[which] = wavebuffer;
-	SoundChunks[which] = Mix_LoadWAV_RW(SDL_RWFromMem(wavebuffer, sizeof(headchunk) + sizeof(wavechunk) + destsamples * 2), 1);
+
+	if(which == 16)
+	{
+		wiiLogWriteLine("==============================\n");
+		wiiLogWriteLine("LEBENSND Processing report\n");
+		wiiLogWriteLine("SD_PrepareSound:::\n");
+		wiiLogWriteLine("==============================\n");
+		
+		wiiLogWriteLine("Sound number = %x\n", which);
+		wiiLogWriteLine("Page = %x\n", page);
+		wiiLogWriteLine("Size = %x\n", size);
+		wiiLogWriteLine("ORIGSAMPLERATE = %x\n", ORIGSAMPLERATE);
+		wiiLogWriteLine("param_samplerate = %x\n", param_samplerate);
+		wiiLogWriteLine("destsamples = %x\n", destsamples);
+		wiiLogWriteLine("head.bitspersample = %x\n", head.bitspersample);
+		wiiLogWriteLine("head.bytespersample = %x\n", head.bytespersample);
+		wiiLogWriteLine("head.bytespersec = %x\n", head.bytespersec);
+		wiiLogWriteLine("head.channels = %x\n", head.channels);
+		wiiLogWriteLine("head.formatlen = %x\n", head.formatlen);
+		wiiLogWriteLine("head.samplerate = %x\n", head.samplerate);
+		wiiLogWriteLine("head.val0x0001 = %x\n", head.val0x0001);
+		wiiLogWriteLine("dhead.chunklength = %x\n", dhead.chunklength);
+		wiiLogWriteLine("head.filelenminus8 = %x\n\n", head.filelenminus8);
+
+		for(int i=0; i<destsamples; i++, cursample+=samplestep)
+			wiiLogWriteLine("%x", newsamples[i]);
+	}
+		
+		SoundBuffers[which] = wavebuffer;
+		SoundChunks[which] = Mix_LoadWAV_RW(SDL_RWFromMem(wavebuffer, sizeof(headchunk) + sizeof(wavechunk) + destsamples * 2), 1);
 }
 
 int SD_PlayDigitized(word which,int leftpos,int rightpos)
@@ -678,13 +689,13 @@ SDL_SetupDigi(void)
     NumDigi = (word) PM_GetPageSize(ChunksInFile - 1) / 4;
 	DigiList = (digiinfo *) malloc(NumDigi * sizeof(digiinfo));
     int i;
-    for(i = 0; i < NumDigi; i++)
+	for(i = 0; i < NumDigi; i++)
     {
         // Calculate the size of the digi from the sizes of the pages between
         // the start page and the start page of the next sound
 
         DigiList[i].startpage = soundInfoPage[i * 2];
-		DigiList[i].startpage = wiiShortSwap(DigiList[i].startpage);
+		DigiList[i].startpage = (word)wiiShortSwap(DigiList[i].startpage);
 	
 		if((int) DigiList[i].startpage >= ChunksInFile - 1)
         {
@@ -709,15 +720,24 @@ SDL_SetupDigi(void)
         for(int page = PMSoundStart + DigiList[i].startpage; page < lastPage; page++)
             size += PM_GetPageSize(page);
 
-        // Don't include padding of sound info page, if padding was added
+		// Don't include padding of sound info page, if padding was added
         if(lastPage == ChunksInFile - 1 && PMSoundInfoPagePadded) size--;
 
         // Patch lower 16-bit of size with size from sound info page.
         // The original VSWAP contains padding which is included in the page size,
         // but not included in the 16-bit size. So we use the more precise value.
-        if((size & 0xffff0000) != 0 && (size & 0xffff) < wiiShortSwap(soundInfoPage[i * 2 + 1]))
-            size -= 0x10000;
-        size = (size & 0xffff0000) | wiiShortSwap(soundInfoPage[i * 2 + 1]);
+        if((size & 0xffff0000) != 0 && (size & 0xffff) < (word)wiiShortSwap(soundInfoPage[i * 2 + 1]))
+			size -= 0x10000;
+
+
+		
+		//wiiLogWriteLine("Digi: #%d -- SoundInfoPage -- %x\n", i, soundInfoPage[i * 2 + 1]);
+
+		//wiiLongSwappedInfoPage = wiiLongSwap(soundInfoPage[i * 2 + 1]);
+
+		//wiiLogWriteLine("Digi: #%d -- Left - %x -- Right - %x\n", i, size & 0xffff0000, (unsigned short)wiiShortSwap(soundInfoPage[i * 2 + 1]));
+		
+		size = (size & 0xFFFF0000) | (word)wiiShortSwap(soundInfoPage[i * 2 + 1]);
 
         DigiList[i].length = size;
 		
@@ -1052,7 +1072,7 @@ void SDL_IMFMusicPlayer(void *udata, Uint8 *stream, int len)
             do
             {
                 if(sqHackTime > alTimeCount) break;
-                sqHackTime = alTimeCount + wiiShortSwap(*(sqHackPtr+1));
+                sqHackTime = alTimeCount + (word)wiiShortSwap(*(sqHackPtr+1));
                 alOut(*(byte *) sqHackPtr, *(((byte *) sqHackPtr)+1));
                 sqHackPtr += 2;
                 sqHackLen -= 4;
@@ -1180,7 +1200,7 @@ SD_PlaySound(soundnames sound)
     SoundCommon     *s;
     int             lp,rp;
 
-    lp = LeftPosition;
+	lp = LeftPosition;
     rp = RightPosition;
     LeftPosition = 0;
     RightPosition = 0;
@@ -1369,8 +1389,8 @@ SD_StartMusic(int chunk)
     {
         int32_t chunkLen = CA_CacheAudioChunk(chunk);
         sqHack = (word *)(void *) audiosegs[chunk];     // alignment is correct
-        if ( wiiShortSwap(*sqHack) == 0 ) sqHackLen = sqHackSeqLen = chunkLen;
-        else sqHackLen = sqHackSeqLen = wiiShortSwap( *sqHack++ );
+        if ( (word)wiiShortSwap(*sqHack) == 0 ) sqHackLen = sqHackSeqLen = chunkLen;
+        else sqHackLen = sqHackSeqLen = (word)wiiShortSwap( *sqHack++ );
         sqHackPtr = sqHack;
         sqHackTime = 0;
         alTimeCount = 0;
@@ -1387,8 +1407,8 @@ SD_ContinueMusic(int chunk, int startoffs)
     {
         int32_t chunkLen = CA_CacheAudioChunk(chunk);
         sqHack = (word *)(void *) audiosegs[chunk];     // alignment is correct
-        if ( wiiShortSwap(*sqHack) == 0 ) sqHackLen = sqHackSeqLen = chunkLen;
-        else sqHackLen = sqHackSeqLen = wiiShortSwap( *sqHack++ );
+        if ( (word)wiiShortSwap(*sqHack) == 0 ) sqHackLen = sqHackSeqLen = chunkLen;
+        else sqHackLen = sqHackSeqLen = (word)wiiShortSwap( *sqHack++ );
         sqHackPtr = sqHack;
 
         if(startoffs >= sqHackLen)
